@@ -1,0 +1,101 @@
+{
+    "name": "Resolume > APC40 MkII",
+    "type": "OSC",
+    "path": "Custom",
+    "version": "1.0.0",
+    "description": "Chataigne Module for Resolume to interface with the AP40 MkII",
+    "url": "https://github.com/cunabula27/Resolume-APC40-MkII-Chataigne-Module",
+    "downloadURL": "https://github.com/cunabula27/Resolume-APC40-MkII-Chataigne-Module/archive/master.zip",
+    "hasInput": true,
+    "parameters": {
+        "Deck Width": {
+            "type": "Integer",
+            "min": 1,
+            "default": 1
+        },
+        "Deck Height": {
+            "type": "Integer",
+            "min": 1,
+            "max": 2,
+            "default": 1
+        },
+        "Generate Decks": {
+            "type": "Boolean",
+            "default": false
+        }
+    },
+    "values": {
+        "Crossfader": {
+            "type": "Container",
+            "collapsed": true,
+            "/composition/layers/1/crossfadergroup": {
+                "type": "Enum",
+                "options": {
+                    "Off": 0,
+                    "A (Yellow)": 1,
+                    "B (Orange)": 2
+                }
+            },
+            "/composition/layers/2/crossfadergroup": {
+                "type": "Enum",
+                "options": {
+                    "Off": 0,
+                    "A (Yellow)": 1,
+                    "B (Orange)": 2
+                }
+            },
+            "/composition/layers/3/crossfadergroup": {
+                "type": "Enum",
+                "options": {
+                    "Off": 0,
+                    "A (Yellow)": 1,
+                    "B (Orange)": 2
+                }
+            },
+            "/composition/layers/4/crossfadergroup": {
+                "type": "Enum",
+                "options": {
+                    "Off": 0,
+                    "A (Yellow)": 1,
+                    "B (Orange)": 2
+                }
+            },
+            "/composition/layers/5/crossfadergroup": {
+                "type": "Enum",
+                "options": {
+                    "Off": 0,
+                    "A (Yellow)": 1,
+                    "B (Orange)": 2
+                }
+            },
+            "/composition/layers/6/crossfadergroup": {
+                "type": "Enum",
+                "options": {
+                    "Off": 0,
+                    "A (Yellow)": 1,
+                    "B (Orange)": 2
+                }
+            },
+            "/composition/layers/7/crossfadergroup": {
+                "type": "Enum",
+                "options": {
+                    "Off": 0,
+                    "A (Yellow)": 1,
+                    "B (Orange)": 2
+                }
+            },
+            "/composition/layers/8/crossfadergroup": {
+                "type": "Enum",
+                "options": {
+                    "Off": 0,
+                    "A (Yellow)": 1,
+                    "B (Orange)": 2
+                }
+            }
+        }
+    },
+    "scripts": [
+        "Resolume-APC40.js"
+    ],
+    "commands": {}
+}
