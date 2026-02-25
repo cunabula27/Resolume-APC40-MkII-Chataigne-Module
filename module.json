@@ -25,7 +25,133 @@
         }
     },
     "values": {
-        "Crossfader": {
+        "Faders": {
+            "type": "Container",
+            "collapsed": true,
+            "/composition/layers/1/master": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider",
+                "readOnly": true
+            },
+            "/composition/layers/2/master": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider",
+                "readOnly": true
+            },
+            "/composition/layers/3/master": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider",
+                "readOnly": true
+            },
+            "/composition/layers/4/master": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider",
+                "readOnly": true
+            },
+            "/composition/layers/5/master": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider",
+                "readOnly": true
+            },
+            "/composition/layers/6/master": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider",
+                "readOnly": true
+            },
+            "/composition/layers/7/master": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider",
+                "readOnly": true
+            },
+            "/composition/layers/8/master": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider",
+                "readOnly": true
+            },
+            "/composition/master": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider",
+                "readOnly": true
+            },
+            "/composition/crossfader/phase": {
+                "type": "Float",
+                "min": -1,
+                "max": 1,
+                "ui": "slider",
+                "readOnly": true
+            }
+        },
+        "Clip Knobs": {
+            "type": "Container",
+            "collapsed": true,
+            "/composition/selectedclip/dashboard/link1": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider"
+            },
+            "/composition/selectedclip/dashboard/link2": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider"
+            },
+            "/composition/selectedclip/dashboard/link3": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider"
+            },
+            "/composition/selectedclip/dashboard/link4": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider"
+            },
+            "/composition/selectedclip/dashboard/link5": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider"
+            },
+            "/composition/selectedclip/dashboard/link6": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider"
+            },
+            "/composition/selectedclip/dashboard/link7": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider"
+            },
+            "/composition/selectedclip/dashboard/link8": {
+                "type": "Float",
+                "min": 0,
+                "max": 1,
+                "ui": "slider"
+            }
+        },
+        "Crossfade Assign [A|B]": {
             "type": "Container",
             "collapsed": true,
             "/composition/layers/1/crossfadergroup": {
