@@ -36,10 +36,10 @@ function generateDecks(deckWidth, deckHeight) {
 					var myIntParam = local.values[subDeckName].clipStatus.addIntParameter(connectedName, "", "", 0, 4);
 					var selectAddress = "/composition/layers/" + k + "/clips/" + l + "/select";
 					var selectName = "Layer " + k + ", Clip " + l + " - Selected";
-					var myStringParam = local.values[subDeckName].selected.addStringParameter(selectName, "", selectAddress);
+					myStringParam = local.values[subDeckName].selected.addStringParameter(selectName, "", selectAddress);
 					var connectAddress = "/composition/layers/" + k + "/clips/" + l + "/connect";
 					var connectName = "Layer " + k + ", Clip " + l + " - Triggered";
-					var myStringParam = local.values[subDeckName].triggered.addStringParameter(connectName, "", connectAddress);
+					myStringParam = local.values[subDeckName].triggered.addStringParameter(connectName, "", connectAddress);
 				};
 			};
 		};
@@ -47,19 +47,24 @@ function generateDecks(deckWidth, deckHeight) {
 };
 
 function moduleValueChanged (value) {
-	if (value.getParent().name == "crossfader"){
+	if (value.getParent().name == "crossfadeAssign_AB_"){
 	local.send(value.niceName, value.get()); 
 	};
 };
 
-function oscEvent(address, args)
-{
-	//param "address" is the address of the OSC Message
-	//param "args" is an array containing all the arguments of the OSC Message
+function oscEvent(address, args) {
 
-	script.log("OSC Message received "+address+", "+args.length+" arguments");
-	for(var i=0; i < args.length; i++)
-	{
-		script.log(" > "+args[i]);
-	}
-}
+	if (local.match(address, "/composition/layers/?/clips/?/dashboard/link?")) { 	// Set Knob Custom Variable on Clip Load
+		if ((args[0] > 2)) {
+			var knob = "selectedClip_Knob" + address.charAt(44);
+			root.customVariables.knobs.variables[knob][knob].set(args[0]);
+		};
+	} else
+
+	if (local.match(address, "/composition/layers/?/clips/?/connected")) { 			// Light Clip Stop Pads
+		if ((args[0] > 2)) {
+			var clip = "clipLayer" + address.charAt(20);
+			root.customVariables.helpers.variables[clip][clip].set(true);
+		};
+	};
+};
