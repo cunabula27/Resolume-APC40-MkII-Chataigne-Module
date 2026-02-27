@@ -5,6 +5,9 @@ var refresh = local.parameters.generateDecks.get();
 function init() {
 	if (refresh == true) {
 		generateDecks(x, y);
+		// script.log("x = ");
+		// script.log(x);
+		// root.customVariables.helpers.variables.deckWidth.deckWidth.set(x);
 	};
 };
 
@@ -14,6 +17,7 @@ function moduleParameterChanged(param) {
 		y = local.parameters.deckHeight.get();
 		if (param.name == "generateDecks" && param.get() == true) {
 			generateDecks(x, y);
+			// root.customVariables.helpers.variables.deckWidth.deckWidth.set(x);
 		};
 		script.log("Module parameter changed : " + param.name + " > " + param.get());
 	} else {
@@ -53,18 +57,32 @@ function moduleValueChanged (value) {
 };
 
 function oscEvent(address, args) {
-
-	if (local.match(address, "/composition/layers/?/clips/?/dashboard/link?")) { 	// Set Knob Custom Variable on Clip Load
-		if ((args[0] > 2)) {
+	if (local.match(address, "/composition/layers/*/clips/*/dashboard/link?")) {// Set Knob Custom Variable on Clip Load
+		if (args[0] > 2) {
 			var knob = "selectedClip_Knob" + address.charAt(44);
 			root.customVariables.knobs.variables[knob][knob].set(args[0]);
 		};
 	} else
-
-	if (local.match(address, "/composition/layers/?/clips/?/connected")) { 			// Light Clip Stop Pads
-		if ((args[0] > 2)) {
-			var clip = "clipLayer" + address.charAt(20);
-			root.customVariables.helpers.variables[clip][clip].set(true);
+	if (local.match(address, "/composition/layers/*/clips/*/connected")) { 			// Light Clip Stop Pads
+		var layer = address.charAt(20);
+		var clip = parseInt(address.charAt(28));
+		var layerVar = "clipInLayer" + layer;
+		var clipVar = "clipLayer" + layer;
+		if (args[0] > 2) {
+			root.customVariables.helpers.variables[layerVar][layerVar].set(clip);
+			root.customVariables.helpers.variables[clipVar][clipVar].set(true);
+		} else if (args[0] < 3 && root.customVariables.helpers.variables[layerVar][layerVar].get() == clip) {
+			root.customVariables.helpers.variables[clipVar][clipVar].set(false);
+		};
+	} else
+	if (local.match(address, "/composition/columns/*/connected")) {
+		var columnVar;
+		if (address.charAt(22) == "/") { columnVar = "column" + address.charAt(21); }
+		else { columnVar = "column" + address.charAt(21) + address.charAt(22); };
+		if (args[0] == 2) {
+			root.customVariables.columns.variables[columnVar][columnVar].set(true);
+		} else {
+			root.customVariables.columns.variables[columnVar][columnVar].set(false);
 		};
 	};
 };
