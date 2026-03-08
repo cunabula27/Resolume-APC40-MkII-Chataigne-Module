@@ -4,20 +4,17 @@ var refresh = local.parameters.generateDecks.get();
 
 function init() {
 	if (refresh == true) {
-		generateDecks(x, y);
-		// script.log("x = ");
-		// script.log(x);
-		// root.customVariables.helpers.variables.deckWidth.deckWidth.set(x);
+		generateDecks(x, y);		
 	};
 };
 
 function moduleParameterChanged(param) {
 	if (param.isParameter()) {
-		x = local.parameters.deckWidth.get();
-		y = local.parameters.deckHeight.get();
+
 		if (param.name == "generateDecks" && param.get() == true) {
+			x = local.parameters.deckWidth.get();
+			y = local.parameters.deckHeight.get();
 			generateDecks(x, y);
-			// root.customVariables.helpers.variables.deckWidth.deckWidth.set(x);
 		};
 		script.log("Module parameter changed : " + param.name + " > " + param.get());
 	} else {
@@ -30,59 +27,71 @@ function generateDecks(deckWidth, deckHeight) {
 		for (var j = 1; j < deckHeight + 1; j++) {
 			var subDeckName = "subDeck" + i + "_" + j;
 			var subDeckNiceName = "Sub Deck " + i + " - " + j;
-			var container = local.values.addContainer(subDeckNiceName);
-			var connected = local.values[subDeckName].addContainer("Clip Status");
-			var select = local.values[subDeckName].addContainer("Selected");
-			var connect = local.values[subDeckName].addContainer("Triggered");
+			local.values.addContainer(subDeckNiceName);
+			local.values[subDeckName].addContainer("Clip Status");
+			local.values[subDeckName].addContainer("Select");
+			local.values[subDeckName].addContainer("Connect");
 			for (var k = (j - 1) * 5 + 1; k < (j * 5) + 1; k++) {
 				for (var l = (i - 1) * 8 + 1; l < (i * 8) + 1; l++) {
-					var connectedName = "/composition/layers/" + k + "/clips/" + l + "/connected";
-					var myIntParam = local.values[subDeckName].clipStatus.addIntParameter(connectedName, "", "", 0, 4);
+					var connectedAddress = "/composition/layers/" + k + "/clips/" + l + "/connected";
+					local.values[subDeckName].clipStatus.addIntParameter(connectedAddress, "", "", 0, 4);
 					var selectAddress = "/composition/layers/" + k + "/clips/" + l + "/select";
-					var selectName = "Layer " + k + ", Clip " + l + " - Selected";
-					myStringParam = local.values[subDeckName].selected.addStringParameter(selectName, "", selectAddress);
+					local.values[subDeckName].select.addTrigger(selectAddress, "Select Clip"); 									//This will add a trigger (button)
 					var connectAddress = "/composition/layers/" + k + "/clips/" + l + "/connect";
-					var connectName = "Layer " + k + ", Clip " + l + " - Triggered";
-					myStringParam = local.values[subDeckName].triggered.addStringParameter(connectName, "", connectAddress);
+					local.values[subDeckName].connect.addBoolParameter(connectAddress, "True if Connected", false); 			//This will add a boolean parameter (toggle), defaut unchecked
 				};
 			};
 		};
 	};
 };
 
-function moduleValueChanged (value) {
-	if (value.getParent().name == "crossfadeAssign_AB_"){
-	local.send(value.niceName, value.get()); 
+function moduleValueChanged(value) {
+	if (value.getParent().name == "crossfadeAssign_AB_") {
+		local.send(value.niceName, value.get());
+	}
+	else if (value.getParent().name == "connect") {
+		local.send(value.niceName, value.get());
+		if (value.get() == 1) {
+			pingKnobValue(value.niceName, "connect");
+		};
+	}
+	else if (value.getParent().name == "select") {
+		local.send(value.niceName);
+		pingKnobValue(value.niceName, "select");
 	};
 };
 
 function oscEvent(address, args) {
-	if (local.match(address, "/composition/layers/*/clips/*/dashboard/link?")) {// Set Knob Custom Variable on Clip Load
+	var oscAddArr = address.split("/");
+	var layerStr = oscAddArr[3];
+	var clipStr = oscAddArr[5];
+	if (local.match(address, "/composition/layers/*/clips/*/dashboard/link?")) {	// Set Knob Custom Variable on Clip Load
+		var knob = "knob" + oscAddArr[7].charAt(4);
+		root.customVariables.trackKnobs.variables[knob][knob].set(args[0]);
+	} else if (local.match(address, "/composition/layers/*/clips/*/connected")) {	// Light Clip Stop Pads
+		var layerVar = "clipInLayer" + layerStr;
+		var clipVar = "layer" + layerStr + "Playing";
 		if (args[0] > 2) {
-			var knob = "selectedClip_Knob" + address.charAt(44);
-			root.customVariables.knobs.variables[knob][knob].set(args[0]);
-		};
-	} else
-	if (local.match(address, "/composition/layers/*/clips/*/connected")) { 			// Light Clip Stop Pads
-		var layer = address.charAt(20);
-		var clip = parseInt(address.charAt(28));
-		var layerVar = "clipInLayer" + layer;
-		var clipVar = "clipLayer" + layer;
-		if (args[0] > 2) {
-			root.customVariables.helpers.variables[layerVar][layerVar].set(clip);
+			root.customVariables.helpers.variables[layerVar][layerVar].set(parseInt(clipStr));
 			root.customVariables.helpers.variables[clipVar][clipVar].set(true);
-		} else if (args[0] < 3 && root.customVariables.helpers.variables[layerVar][layerVar].get() == clip) {
+		} else if (args[0] < 3 && root.customVariables.helpers.variables[layerVar][layerVar].get() == parseInt(clipStr)) {
 			root.customVariables.helpers.variables[clipVar][clipVar].set(false);
 		};
-	} else
-	if (local.match(address, "/composition/columns/*/connected")) {
-		var columnVar;
-		if (address.charAt(22) == "/") { columnVar = "column" + address.charAt(21); }
-		else { columnVar = "column" + address.charAt(21) + address.charAt(22); };
+	} else if (local.match(address, "/composition/columns/*/connected")) {
+		var columnVar = "column" + layerStr; 										// It's the column number but no point in renaming for the sake of it
 		if (args[0] == 2) {
 			root.customVariables.columns.variables[columnVar][columnVar].set(true);
 		} else {
 			root.customVariables.columns.variables[columnVar][columnVar].set(false);
 		};
+	};
+};
+
+function pingKnobValue(address, arg) { // Incoming address and string to replace from it
+	var knobQuery;
+	for (i = 1; i < 9; i++) {
+		knobQuery = "dashboard/link" + i;
+		var pingAddress = address.replace(arg, knobQuery);
+		local.send(pingAddress, "?");
 	};
 };
